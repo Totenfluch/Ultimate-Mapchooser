@@ -410,8 +410,14 @@ public Action:Command_Nominate(client, args)
 		if (args > 0)
 		{
 			//Get what was typed.
-			decl String:arg[MAP_LENGTH];
+			decl String:arg[PLATFORM_MAX_PATH];
 			GetCmdArg(1, arg, sizeof(arg));
+			char fmap[PLATFORM_MAX_PATH];
+			FindMapResult findMapResult = FindMap(arg, fmap, sizeof(fmap));
+			if(findMapResult != FindMap_NotFound) {
+				strcopy(arg, sizeof(arg), fmap);
+			}
+			
 			TrimString(arg);
 			
 			//Get the selected map.
@@ -420,7 +426,7 @@ public Action:Command_Nominate(client, args)
 			if (!KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName)))
 			{
 				//TODO: Change to translation phrase
-				ReplyToCommand(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
+				ReplyToCommand(client, "\x03[UMC]\x01 Could not find map \"%s\" found -%s-", arg, fmap);
 			}
 			else
 			{
