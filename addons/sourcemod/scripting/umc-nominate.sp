@@ -671,6 +671,21 @@ Handle:BuildNominationMenu(client, const String:cat[] = INVALID_GROUP)
 		//Get the display string.
 		UMC_FormatDisplayString(display, sizeof(display), dispKV, mapBuff, groupBuff);
 		
+		if (!StrEqual(minPlayersOnMap, "") && !StrEqual(minTimeRequired, "")) {
+			char hour[3];
+			char minute[3];
+			Format(hour, sizeof(hour), "%s", minTimeRequired);
+			Format(minute, sizeof(minute), "%s", minTimeRequired[2]);
+			Format(display, sizeof(display), "%s (requires %s players + time %sh%sm)", display, minPlayersOnMap, hour, minute);
+		} else if (!StrEqual(minTimeRequired, "")) {
+			char hour[3];
+			char minute[3];
+			Format(hour, sizeof(hour), "%s", minTimeRequired);
+			Format(minute, sizeof(minute), "%s", minTimeRequired[2]);
+			Format(display, sizeof(display), "%s (time %sh%sm)", display, hour, minute);
+		} else if (!StrEqual(minPlayersOnMap, "")) {
+			Format(display, sizeof(display), "%s (requires %s players)", display, minPlayersOnMap);
+		}
 		
 		KvRewind(map_kv);
 		
@@ -682,11 +697,10 @@ Handle:BuildNominationMenu(client, const String:cat[] = INVALID_GROUP)
 			
 			GetMenuItem(menu, xi, infoBuf, sizeof(infoBuf), style, dispBuf, sizeof(dispBuf));
 			
-			
 			char toCompare[2][128];
 			strcopy(toCompare[0], 128, dispBuf);
 			strcopy(toCompare[1], 128, display);
-			SortStrings(toCompare, sizeof(toCompare[]), Sort_Ascending);
+			SortStrings(toCompare, sizeof(toCompare), Sort_Ascending);
 			
 			if(StrEqual(toCompare[0], display)) {
 				InsertMenuItem(menu, xi, ".-.-.", display, ITEMDRAW_DISABLED);
