@@ -628,9 +628,6 @@ RunTests()
 //Called before the plugin loads, sets up our natives.
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
-    MarkNativeAsOptional("GetMapDisplayName"); // SM 1.8
-    MarkNativeAsOptional("FindMap"); // SM 1.7.3
-
     CreateNative("UMC_AddWeightModifier", Native_UMCAddWeightModifier);
     CreateNative("UMC_StartVote", Native_UMCStartVote);
     CreateNative("UMC_GetCurrentMapGroup", Native_UMCGetCurrentGroup);
@@ -793,7 +790,6 @@ public OnPluginStart()
     HookEventEx("teamplay_win_panel", Event_RoundEnd); //TF2
     HookEventEx("arena_win_panel",    Event_RoundEnd); //TF2
     HookEventEx("round_win",          Event_RoundEnd); //Nuclear Dawn
-    HookEventEx("game_end",           Event_RoundEnd); //EmpiresMod
     
     //Initialize our vote arrays
     nominations_arr = CreateArray();
@@ -3394,31 +3390,13 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
 {
     DEBUG_MESSAGE("OFTS: '%s' '%s' '%s'", map, group, template)
 
-    decl String:resolvedMap[MAP_LENGTH];
-	
-    if (GetFeatureStatus(FeatureType_Native, "GetMapDisplayName") == FeatureStatus_Available)
-    {
-        // SM 1.8
-        GetMapDisplayName(map, resolvedMap, sizeof(resolvedMap));
-    }
-    else
-    if (GetFeatureStatus(FeatureType_Native, "FindMap") == FeatureStatus_Available)
-    {
-        // SM 1.7.3
-        FindMap(map, resolvedMap, sizeof(resolvedMap));
-    }
-    else
-    {
-        strcopy(resolvedMap, sizeof(resolvedMap), map);
-    }
-
     if (strlen(template) == 0)
     {
-        strcopy(template, maxlen, resolvedMap);
+        strcopy(template, maxlen, map);
         return;
     }
     
-    ReplaceString(template, maxlen, "{MAP}", resolvedMap, false);
+    ReplaceString(template, maxlen, "{MAP}", map, false);
     
     decl String:nomString[16];
     GetConVarString(cvar_nomdisp, nomString, sizeof(nomString));

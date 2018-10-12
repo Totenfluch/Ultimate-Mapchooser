@@ -40,11 +40,6 @@ new Handle:time_played_groups_trie = INVALID_HANDLE;
 
 new time_penalty;
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-{
-    MarkNativeAsOptional("FindMap");
-}
-
 public OnPluginStart()
 {
     cvar_nom_ignore = CreateConVar(
@@ -97,17 +92,7 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
     if (!GetTrieValue(time_played_trie, group, groupMaps))
         return false;
     new timePlayedMap;
-    decl String:resolvedMap[MAP_LENGTH];
-    // SM 1.7.3
-    if (GetFeatureStatus(FeatureType_Native, "FindMap") == FeatureStatus_Available)
-    {
-        FindMap(map, resolvedMap, sizeof(resolvedMap));
-    }
-    else
-    {
-        strcopy(resolvedMap, sizeof(resolvedMap), map);
-    }
-    if (!GetTrieValue(groupMaps, resolvedMap, timePlayedMap))
+    if (!GetTrieValue(groupMaps, map, timePlayedMap))
         return false;
     new minsSinceMapPlayed = GetTime() - timePlayedMap / 60;
     

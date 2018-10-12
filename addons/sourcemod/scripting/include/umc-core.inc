@@ -7,7 +7,7 @@
 #pragma semicolon 1
 
 #define PL_VERSION "3.4.6-dev"
-#define UMC_DEBUG 1
+#define UMC_DEBUG 0
 #define AUTOUPDATE_ENABLE 0
 #define AUTOUPDATE_DEV 0
 
@@ -49,7 +49,7 @@ public __pl_umccore_SetNTVOptional()
 }
 
 #define INVALID_GROUP ""
-#define MAP_LENGTH PLATFORM_MAX_PATH
+#define MAP_LENGTH 64
 
 #define MAP_TRIE_MAP_KEY   "map"
 #define MAP_TRIE_GROUP_KEY "group"
